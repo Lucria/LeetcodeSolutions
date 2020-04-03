@@ -8,6 +8,9 @@
 class Solution {
 public:
     void reverseString(vector<char>& s) {
+
+        ios_base::sync_with_stdio(false);
+        cin.tie(nullptr);
         // Uses XOR swap
         int length = s.size();
         for (int i = 0; i < length / 2; i++) {
