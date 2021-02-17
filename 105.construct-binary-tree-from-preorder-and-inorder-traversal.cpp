@@ -19,7 +19,46 @@
 class Solution {
 public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        // * Recursive
+        // ! Iterative
+        if (preorder.size() == 0) return NULL;
+
+        // Initialize hashmap with indices of values for inorder array
+        unordered_map<int, int> hashmap;
+        for (int i = 0; i < inorder.size(); i++) {
+            hashmap[inorder[i]] = i;
+        }
+
+        // Push root node into stack
+        stack<TreeNode*> s;
+        int root = preorder[0];
+        TreeNode* rootNode = new TreeNode(root);
+        s.push(rootNode);
+
+        for (int i = 1; i < preorder.size(); i++) {
+            int nodeVal = preorder[i];
+            TreeNode* node = new TreeNode(nodeVal);
+
+            if (hashmap[nodeVal] < hashmap[s.top()->val]) {
+                // Index of new node is lower than current root, therefore left of current root
+                s.top()->left = node;
+            } else {
+                // New node is on right of current root or is current root
+                TreeNode* currRoot = NULL;
+                while (!s.empty() && hashmap[nodeVal] > hashmap[s.top()->val]) {
+                    currRoot = s.top();
+                    s.pop();
+                }
+                // While loop ends when the values are equal. This means we have reached the current node;
+                currRoot->right = node;
+            }
+            s.push(node);
+        }
+
+        return rootNode;
+    }
+
+    TreeNode* buildTreeRecursive(vector<int>& preorder, vector<int>& inorder) {
+        // ! Recursive
         int root = 0;
         return build(preorder, inorder, root, 0,preorder.size() - 1);
     }
